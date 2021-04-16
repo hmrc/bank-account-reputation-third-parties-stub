@@ -45,7 +45,7 @@ class SurepayStubControllerTest extends AnyFunSuite {
       Name = Some("Jim Jones")
     )
 
-    val fakeRequest = FakeRequest(method = "POST", path = s"/surepay")
+    val fakeRequest = FakeRequest(method = "POST", path = s"/surepay/v1/gateway")
       .withHeaders(DEFAULT_TEST_HEADER)
       .withJsonBody(Json.toJson(ConfirmationOfPayeeRequest(Identification = "12345600000000", Name = "J Jones")))
 
@@ -63,7 +63,7 @@ class SurepayStubControllerTest extends AnyFunSuite {
       ReasonCode = Some("ANNM")
     )
 
-    val fakeRequest = FakeRequest(method = "POST", path = s"/surepay")
+    val fakeRequest = FakeRequest(method = "POST", path = s"/surepay/v1/gateway")
       .withHeaders(DEFAULT_TEST_HEADER)
       .withJsonBody(Json.toJson(ConfirmationOfPayeeRequest(Identification = "65432100000000", Name = "J Jones")))
 
@@ -78,7 +78,7 @@ class SurepayStubControllerTest extends AnyFunSuite {
 
     val expectedResult = ConfirmationOfPayeeResponse()
 
-    val fakeRequest = FakeRequest(method = "POST", path = s"/surepay")
+    val fakeRequest = FakeRequest(method = "POST", path = s"/surepay/v1/gateway")
       .withHeaders(DEFAULT_TEST_HEADER)
       .withJsonBody(Json.toJson(ConfirmationOfPayeeRequest(Identification = "20710232211648", Name = "J Jones")))
 
