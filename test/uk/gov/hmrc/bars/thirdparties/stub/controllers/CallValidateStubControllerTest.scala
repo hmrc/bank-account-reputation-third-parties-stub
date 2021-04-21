@@ -39,8 +39,8 @@ class CallValidateStubControllerTest extends AnyFunSuite {
 
   test("Fully populated valid CallValidate response") {
     val individual = FinancialId(
-      sortCode = "999998",
-      accountNumber = "29250380",
+      sortCode = "204578",
+      accountNumber = "89251211",
       title = Some("MRS"),
       firstName = "ANNIE",
       lastName = "MCLAREN",
@@ -94,8 +94,8 @@ class CallValidateStubControllerTest extends AnyFunSuite {
 
   test("Too many requests response") {
     val individual = FinancialId(
-      sortCode = "999999",
-      accountNumber = "00000000",
+      sortCode = "204578",
+      accountNumber = "89291211",
       title = Some("MR"),
       firstName = "Not",
       lastName = "Applicable",
@@ -115,8 +115,8 @@ class CallValidateStubControllerTest extends AnyFunSuite {
 
   test("Internal server error response") {
     val individual = FinancialId(
-      sortCode = "999999",
-      accountNumber = "00000001",
+      sortCode = "204578",
+      accountNumber = "89293211",
       title = Some("MR"),
       firstName = "Not",
       lastName = "Applicable",
