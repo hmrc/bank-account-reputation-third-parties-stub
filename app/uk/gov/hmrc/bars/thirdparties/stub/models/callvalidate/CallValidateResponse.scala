@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.bars.thirdparties.stub.controllers
+package uk.gov.hmrc.bars.thirdparties.stub.models.callvalidate
 
-import controllers.Assets.{Ok, TooManyRequests}
-import play.api.mvc.{Action, AnyContent, ControllerComponents, Request}
-
-import javax.inject.Inject
 import scala.xml.Elem
 
-object CallCreditStubController
+case class CallValidateResponse (data: CallValidateData) {
 
-class CallCreditStubController @Inject()(cc: ControllerComponents) {
-
-  val rateLimitingSortCodes: Array[String] = Array("999999", "999997")
-
-  val xmlResponse: Elem =
-    <Results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" APIVERSION="5.7.0 - 20150811">
+  def build(): Elem = {
+    xml.XML.loadString(
+      s"""
+      <Results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" APIVERSION="5.7.0 - 20150811">
       <Result RID="CC-TEST-HARNESS" PID="LTJ-CT1-8871-46651-5788" DateTime="21-06-2016 14:29">
         <Displays>
           <ChecksCompleted>
@@ -54,13 +48,13 @@ class CallCreditStubController @Inject()(cc: ControllerComponents) {
           <InputData>
             <Individual>
               <Dateofbirth>1970-01-01</Dateofbirth>
-              <Title>Mrs</Title>
-              <Firstname>ANNIE</Firstname>
-              <Surname>MCLAREN</Surname>
+              <Title>${data.title}</Title>
+              <Firstname>${data.firstname}</Firstname>
+              <Surname>${data.surname}</Surname>
             </Individual>
             <Address>
-              <Buildingnumber>1</Buildingnumber>
-              <Postcode>X9 9AB</Postcode>
+              <Buildingnumber>${data.flatNumber.getOrElse(data.street)}</Buildingnumber>
+              <Postcode>${data.postcode}</Postcode>
             </Address>
           </InputData>
           <BankcheckStandard>
@@ -120,7 +114,7 @@ class CallCreditStubController @Inject()(cc: ControllerComponents) {
             <appverified>Yes</appverified>
             <cifas/>
             <confirmatorydobs>0</confirmatorydobs>
-            <currentaddressmatched>1, BUCK HOUSE, LONDON, SW1A 1AA</currentaddressmatched>
+            <currentaddressmatched>${data.flatNumber.getOrElse(data.street)}, ${data.street}, ${data.town}, ${data.postcode}</currentaddressmatched>
             <dvlawarning>false</dvlawarning>
             <ervalid>1</ervalid>
             <grodeceased>false</grodeceased>
@@ -134,7 +128,7 @@ class CallCreditStubController @Inject()(cc: ControllerComponents) {
             <levelofconfidenceshare>5</levelofconfidenceshare>
             <lorwarning>false</lorwarning>
             <matchlevel>IndividualReport</matchlevel>
-            <namematched>MR DAVID ANTHONY TEST</namematched>
+            <namematched>${data.title} ${data.firstname} ${data.surname}</namematched>
             <namepicklistfound>false</namepicklistfound>
             <numaddresslinks>0</numaddresslinks>
             <numbais>0</numbais>
@@ -174,16 +168,7 @@ class CallCreditStubController @Inject()(cc: ControllerComponents) {
         </Displays>
       </Result>
     </Results>
-
-  def callCreditValidateAPIStub: Action[AnyContent] = cc.actionBuilder {
-    (request: Request[AnyContent]) =>
-      val requestBody = scala.xml.XML.loadString(request.body.toString)
-      val accountNumber = requestBody.\\("Bankaccountnumber").text
-      val sortCode = requestBody.\\("Banksortcode").text
-      if (rateLimitingSortCodes.contains(sortCode) && accountNumber == "00000000") {
-        TooManyRequests("Too many requests")
-      } else {
-        Ok(xmlResponse).as("application/xml")
-      }
+    """.stripMargin)
   }
+
 }

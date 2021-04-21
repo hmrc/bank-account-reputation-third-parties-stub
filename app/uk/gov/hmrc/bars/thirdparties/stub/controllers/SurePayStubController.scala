@@ -40,21 +40,21 @@ class SurePayStubController @Inject()(stubbedSurepayData: Map[String, SurepayDat
   }
 
   def calculateDesiredResponse(identification: String): Result = {
-    val foo: Option[SurepayData] = stubbedSurepayData.get(identification)
-    foo match {
+    val filteredStubbedData: Option[SurepayData] = stubbedSurepayData.get(identification)
+    filteredStubbedData match {
       case None =>
         Ok(
           Json.toJson(ConfirmationOfPayeeResponse())
         ).as("application/json;charset=utf-8")
       case _ =>
-        if (foo.get.statusCode == 429) {
+        if (filteredStubbedData.get.statusCode == 429) {
           TooManyRequests("Too many requests")
         } else {
           Ok(
             Json.toJson(ConfirmationOfPayeeResponse(
-              Matched = foo.get.matched,
-              ReasonCode = foo.get.reasonCode,
-              Name = foo.get.accountName))
+              Matched = filteredStubbedData.get.matched,
+              ReasonCode = filteredStubbedData.get.reasonCode,
+              Name = filteredStubbedData.get.accountName))
           ).as("application/json;charset=utf-8")
         }
     }

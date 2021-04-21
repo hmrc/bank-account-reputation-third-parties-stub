@@ -23,7 +23,7 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
-import play.api.test.Helpers.contentAsJson
+import play.api.test.Helpers.{contentAsJson, contentAsString}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.bars.thirdparties.stub.AppConfig
 import uk.gov.hmrc.bars.thirdparties.stub.models.surepay.{ConfirmationOfPayeeRequest, ConfirmationOfPayeeResponse, RefreshTokenResponse}
@@ -38,7 +38,6 @@ class SurepayStubControllerTest extends AnyFunSuite {
   private val surePayStubController = new SurePayStubController(appConfig.loadStubbedSurepayData, stubMessagesControllerComponents())
 
   test("Fully populated invalid Surepay response") {
-
     val expectedResult = ConfirmationOfPayeeResponse(
       Matched = false,
       ReasonCode = Some("MBAM"),
@@ -57,7 +56,6 @@ class SurepayStubControllerTest extends AnyFunSuite {
   }
 
   test("Invalid Surepay response with only reason code and matched flag") {
-
     val expectedResult = ConfirmationOfPayeeResponse(
       Matched = false,
       ReasonCode = Some("ANNM")
@@ -75,7 +73,6 @@ class SurepayStubControllerTest extends AnyFunSuite {
   }
 
   test("Valid Surepay response") {
-
     val expectedResult = ConfirmationOfPayeeResponse()
 
     val fakeRequest = FakeRequest(method = "POST", path = s"/surepay/v1/gateway")
@@ -90,7 +87,6 @@ class SurepayStubControllerTest extends AnyFunSuite {
   }
 
   test("Valid Surepay OAuth response") {
-
     val fakeRequest = FakeRequest(method = "POST", path = s"/surepay/oauth/client_credential/accesstoken")
       .withHeaders(DEFAULT_TEST_HEADER)
 
@@ -101,6 +97,18 @@ class SurepayStubControllerTest extends AnyFunSuite {
     assertThat(response.access_token).isNotBlank
     assertThat(response.expires_in).isEqualTo("3600")
     assertThat(response.token_type).isEqualTo("BearerToken")
+  }
+
+  test("Too many requests response") {
+    val fakeRequest = FakeRequest(method = "POST", path = s"/surepay/v1/gateway")
+      .withHeaders(DEFAULT_TEST_HEADER)
+      .withJsonBody(Json.toJson(ConfirmationOfPayeeRequest(Identification = "99999800000000", Name = "J Jones")))
+
+    val result: Future[Result] = surePayStubController.callSurePayAPIStub.apply(fakeRequest)
+    val response = contentAsString(result)(Timeout.zero)
+
+    assertThat(result.value.get.get.header.status).isEqualTo(Status.TOO_MANY_REQUESTS)
+    assertThat(response).isEqualTo("Too many requests")
   }
 
 }

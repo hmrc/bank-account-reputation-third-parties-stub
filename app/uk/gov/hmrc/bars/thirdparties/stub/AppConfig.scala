@@ -19,6 +19,8 @@ package uk.gov.hmrc.bars.thirdparties.stub
 import com.github.tototoshi.csv.CSVReader
 import com.google.inject.{AbstractModule, Provides}
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.bars.thirdparties.stub.models.AccountDetails
+import uk.gov.hmrc.bars.thirdparties.stub.models.callvalidate.CallValidateData
 import uk.gov.hmrc.bars.thirdparties.stub.models.surepay.SurepayData
 
 import java.io.File
@@ -28,14 +30,42 @@ class AppConfig(environment: Environment, configuration: Configuration) extends 
 
   lazy val surepayDataFile: String = configuration.get[String]("stubbed.data.surepay")
   lazy val creditSafeDataFile: String = configuration.get[String]("stubbed.data.creditsafe")
-  lazy val callCreditDataFile: String = configuration.get[String]("stubbed.data.callcredit")
+  lazy val callValidateDataFile: String = configuration.get[String]("stubbed.data.callvalidate")
 
   private var stubbedSurepayData: Map[String, SurepayData] = Map.empty
+  //private var stubbedCreditSafeData: Map[String, CreditSafeData] = Map.empty
+  private var stubbedCallValidateData: Map[AccountDetails, CallValidateData] = Map.empty
 
   private def loadDataFile(stubbedDataFile: String): File = {
     environment.getExistingFile(stubbedDataFile).getOrElse {
       throw new Exception("Unable to find " + stubbedDataFile)
     }
+  }
+
+  @Provides
+  @Singleton
+  def loadStubbedCallValidateData: Map[AccountDetails, CallValidateData] = {
+    if (stubbedCallValidateData.isEmpty) {
+      val mockedDataStream = CSVReader.open(loadDataFile(callValidateDataFile)).toStreamWithHeaders
+      val it = mockedDataStream.iterator
+      while (it.hasNext) {
+        val data = it.next()
+        val stubbedData: CallValidateData = CallValidateData(
+          statusCode = data("status-code").toInt,
+          title = data("title"),
+          firstname = data("firstname"),
+          surname = data("surname"),
+          flatNumber = if (data("flat-number").trim.isEmpty) None else Some(data("flat-number")),
+          streetNumber = if (data("street-number").trim.isEmpty) None else Some(data("street-number")),
+          street = data("street"),
+          town = data("town"),
+          postcode = data("postcode"),
+          accountExists = data("account-exists")
+        )
+        stubbedCallValidateData += (AccountDetails(data("sort-code"), data("account-number")) -> stubbedData)
+      }
+    }
+    stubbedCallValidateData
   }
 
   @Provides

@@ -1,16 +1,16 @@
 # Ping endpoint
-GET         /ping/ping                                      uk.gov.hmrc.bars.thirdparties.stub.controllers.PingController.ping()
+GET           /ping/ping                                    uk.gov.hmrc.bars.thirdparties.stub.controllers.PingController.ping()
 
 # Kenshoo metrics https://github.com/kenshoo/metrics-play
-GET         /admin/metrics                                  @com.kenshoo.play.metrics.MetricsController.metrics
+GET           /admin/metrics                                @com.kenshoo.play.metrics.MetricsController.metrics
 
-# Transunion Personal endpoint
+# Creditsafe Business endpoint
 
 POST          /Match                                        uk.gov.hmrc.bars.thirdparties.stub.controllers.CreditSafeMatchStubController.creditSafeMatchStub()
 
-# CallCredit Business endpoint
+# CallValidate Personal endpoint (Transunion)
 
-POST          /callvalidateapi/incomingserver.php           uk.gov.hmrc.bars.thirdparties.stub.controllers.CallCreditStubController.callCreditValidateAPIStub()
+POST          /callvalidateapi/incomingserver.php           uk.gov.hmrc.bars.thirdparties.stub.controllers.CallValidateStubController.callValidateAPIStub()
 
 # Confirmation of Payee API (Business/Personal)
 
