@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.bars.thirdparties.stub.controllers
 
-import controllers.Assets.{InternalServerError, Ok, TooManyRequests}
+import play.api.mvc.Results.{InternalServerError, Ok, TooManyRequests}
 import play.api.mvc.{AnyContent, ControllerComponents, _}
 import uk.gov.hmrc.bars.thirdparties.stub.models.AccountDetails
 import uk.gov.hmrc.bars.thirdparties.stub.models.callvalidate.{CallValidateData, CallValidateResponse}

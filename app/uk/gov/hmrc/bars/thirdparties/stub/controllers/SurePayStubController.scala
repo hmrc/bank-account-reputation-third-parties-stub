@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.bars.thirdparties.stub.controllers
 
-import controllers.Assets.{Ok, TooManyRequests}
 import play.api.libs.json._
+import play.api.mvc.Results.{Ok, TooManyRequests}
 import play.api.mvc._
 import uk.gov.hmrc.bars.thirdparties.stub.models.surepay.{ConfirmationOfPayeeRequest, ConfirmationOfPayeeResponse, RefreshTokenResponse, SurepayData}
 

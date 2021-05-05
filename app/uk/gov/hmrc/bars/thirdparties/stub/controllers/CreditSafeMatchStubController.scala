@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.bars.thirdparties.stub.controllers
 
-import controllers.Assets.Ok
 import play.api.libs.json._
+import play.api.mvc.Results.Ok
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Request}
 import uk.gov.hmrc.bars.thirdparties.stub.models.creditsafe.MatchResponse
 
