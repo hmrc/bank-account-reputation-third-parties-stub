@@ -41,12 +41,12 @@ class SurepayStubControllerTest extends AnyFunSuite {
     val expectedResult = ConfirmationOfPayeeResponse(
       Matched = false,
       ReasonCode = Some("MBAM"),
-      Name = Some("Jim Jones")
+      Name = Some("Security Engima")
     )
 
     val fakeRequest = FakeRequest(method = "POST", path = s"/surepay/v1/gateway")
       .withHeaders(DEFAULT_TEST_HEADER)
-      .withJsonBody(Json.toJson(ConfirmationOfPayeeRequest(Identification = "12345600000000", Name = "J Jones")))
+      .withJsonBody(Json.toJson(ConfirmationOfPayeeRequest(Identification = "20710686473611", Name = "J Jones")))
 
     val result: Future[Result] = surePayStubController.callSurePayAPIStub.apply(fakeRequest)
     val response = contentAsJson(result)(Timeout.zero).as[ConfirmationOfPayeeResponse]
@@ -63,7 +63,7 @@ class SurepayStubControllerTest extends AnyFunSuite {
 
     val fakeRequest = FakeRequest(method = "POST", path = s"/surepay/v1/gateway")
       .withHeaders(DEFAULT_TEST_HEADER)
-      .withJsonBody(Json.toJson(ConfirmationOfPayeeRequest(Identification = "65432100000000", Name = "J Jones")))
+      .withJsonBody(Json.toJson(ConfirmationOfPayeeRequest(Identification = "20710274597611", Name = "J Jones")))
 
     val result: Future[Result] = surePayStubController.callSurePayAPIStub.apply(fakeRequest)
     val response = contentAsJson(result)(Timeout.zero).as[ConfirmationOfPayeeResponse]
