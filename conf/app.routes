@@ -4,10 +4,6 @@ GET           /ping/ping                                    uk.gov.hmrc.bars.thi
 # Kenshoo metrics https://github.com/kenshoo/metrics-play
 GET           /admin/metrics                                @com.kenshoo.play.metrics.MetricsController.metrics
 
-# Creditsafe Business endpoint
-
-POST          /Match                                        uk.gov.hmrc.bars.thirdparties.stub.controllers.CreditSafeMatchStubController.creditSafeMatchStub()
-
 # CallValidate Personal endpoint (Transunion)
 
 POST          /callvalidateapi/incomingserver.php           uk.gov.hmrc.bars.thirdparties.stub.controllers.CallValidateStubController.callValidateAPIStub()

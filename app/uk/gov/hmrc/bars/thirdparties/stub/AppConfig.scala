@@ -29,11 +29,9 @@ import javax.inject.Singleton
 class AppConfig(environment: Environment, configuration: Configuration) extends AbstractModule {
 
   lazy val surepayDataFile: String = configuration.get[String]("stubbed.data.surepay")
-  lazy val creditSafeDataFile: String = configuration.get[String]("stubbed.data.creditsafe")
   lazy val callValidateDataFile: String = configuration.get[String]("stubbed.data.callvalidate")
 
   private var stubbedSurepayData: Map[String, SurepayData] = Map.empty
-  //private var stubbedCreditSafeData: Map[String, CreditSafeData] = Map.empty
   private var stubbedCallValidateData: Map[AccountDetails, CallValidateData] = Map.empty
 
   private def loadDataFile(stubbedDataFile: String): File = {
