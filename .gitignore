@@ -35,4 +35,6 @@ project/plugins/project/
 logs/
 sbt/
 tmp/
+.bsp/
+null/
 
