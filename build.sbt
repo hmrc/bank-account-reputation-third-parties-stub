@@ -16,7 +16,7 @@ lazy val root = Project(appName, file("."))
   .settings(scalaSettings: _*)
   .settings(
     majorVersion := 0,
-    scalaVersion := "2.12.13",
+    scalaVersion := "2.13.10",
     resolvers += Resolver.jcenterRepo,
     evictionWarningOptions in update := EvictionWarningOptions.default
       .withWarnTransitiveEvictions(false)
