@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.bars.thirdparties.stub.controllers
 
-import akka.util.Timeout
+import org.apache.pekko.util.Timeout
 import org.assertj.core.api.Assertions.assertThat
 import org.scalatest.funsuite.AnyFunSuite
 import play.api.http.{MimeTypes, Status}
@@ -56,7 +56,8 @@ class CallValidateStubControllerTest extends AnyFunSuite {
         street = "FIA LANE",
         town = "TEST TOWN",
         postcode = "X9 9AB",
-        accountExists = "yes")
+        accountExists = "yes"
+      )
     ).build()
 
     val fakeRequest = FakeRequest(method = "POST", path = s"/callvalidateapi/incomingserver.php")
