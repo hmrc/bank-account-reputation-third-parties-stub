@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.bars.thirdparties.stub.controllers
 
-import akka.util.Timeout
+import org.apache.pekko.util.Timeout
 import org.assertj.core.api.Assertions.assertThat
 import org.scalatest.funsuite.AnyFunSuite
 import play.api.http.Status

@@ -1,9 +1,6 @@
 # Ping endpoint
 GET           /ping/ping                                    uk.gov.hmrc.bars.thirdparties.stub.controllers.PingController.ping()
 
-# Kenshoo metrics https://github.com/kenshoo/metrics-play
-GET           /admin/metrics                                @com.kenshoo.play.metrics.MetricsController.metrics
-
 # CallValidate Personal endpoint (Transunion)
 
 POST          /callvalidateapi/incomingserver.php           uk.gov.hmrc.bars.thirdparties.stub.controllers.CallValidateStubController.callValidateAPIStub()

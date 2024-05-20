@@ -1,33 +1,25 @@
-import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
+import uk.gov.hmrc.DefaultBuildSettings
 
-maintainer := "txm-attribute-validation-g@digital.hmrc.gov.uk"
-val appName = "bank-account-reputation-third-parties-stub"
+ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion := "2.13.12"
+ThisBuild / maintainer := "txm-attribute-validation-g@digital.hmrc.gov.uk"
+val appName = "nino-insights-stub"
 
-lazy val root = Project(appName, file("."))
+lazy val microservice = Project(appName, file("."))
   .enablePlugins(
     play.sbt.PlayScala,
-    SbtAutoBuildPlugin,
-    SbtGitVersioning,
-    SbtDistributablesPlugin
+    SbtDistributablesPlugin,
+    SbtAutoBuildPlugin
   )
-
-  .settings(defaultSettings(): _*)
-  .settings(scalaSettings: _*)
   .settings(
-    majorVersion := 0,
-    scalaVersion := "2.13.10",
-    resolvers += Resolver.jcenterRepo,
-    evictionWarningOptions in update := EvictionWarningOptions.default
-      .withWarnTransitiveEvictions(false)
-      .withWarnDirectEvictions(false)
-      .withWarnScalaVersionEviction(false)
+    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
+    scalacOptions += "-Wconf:src=routes/.*:s"
   )
+  .settings(resolvers += Resolver.jcenterRepo)
+  .settings(scalafmtOnCompile := true)
 
-  .settings(publishingSettings: _*)
-  .settings(
-    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test
-  )
-
-  .configs(Test)
-  .settings(addTestReportOption(Test, "test-reports"))
+lazy val it = project
+  .in(file("it"))
+  .enablePlugins(PlayScala)
+  .dependsOn(microservice % "test->test")
+  .settings(DefaultBuildSettings.itSettings())
