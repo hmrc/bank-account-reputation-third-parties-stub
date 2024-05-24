@@ -18,11 +18,10 @@ package uk.gov.hmrc.bars.thirdparties.stub.models.callvalidate
 
 import scala.xml.Elem
 
-case class CallValidateResponse (data: CallValidateData) {
+case class CallValidateResponse(data: CallValidateData) {
 
   def build(): Elem = {
-    xml.XML.loadString(
-      s"""
+    xml.XML.loadString(s"""
       <Results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" APIVERSION="5.7.0 - 20150811">
       <Result RID="CC-TEST-HARNESS" PID="LTJ-CT1-8871-46651-5788" DateTime="21-06-2016 14:29">
         <Displays>
