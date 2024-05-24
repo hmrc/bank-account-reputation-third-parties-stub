@@ -23,15 +23,13 @@ import uk.gov.hmrc.bars.thirdparties.stub.models.surepay.{ConfirmationOfPayeeReq
 
 import javax.inject.Inject
 
-
-class SurePayStubController @Inject()(stubbedSurepayData: Map[String, SurepayData], cc: ControllerComponents) {
+class SurePayStubController @Inject() (stubbedSurepayData: Map[String, SurepayData], cc: ControllerComponents) {
 
   val rateLimitingAccounts: Array[String] = Array("99999800000000", "99999700000000")
 
-  def callSurePayAPIStub: Action[AnyContent] = cc.actionBuilder {
-    (request: Request[AnyContent]) =>
-      val body: ConfirmationOfPayeeRequest = Json.fromJson(request.body.asJson.get)(ConfirmationOfPayeeRequest.reads).get
-      calculateDesiredResponse(body.Identification)
+  def callSurePayAPIStub: Action[AnyContent] = cc.actionBuilder { (request: Request[AnyContent]) =>
+    val body: ConfirmationOfPayeeRequest = Json.fromJson(request.body.asJson.get)(ConfirmationOfPayeeRequest.reads).get
+    calculateDesiredResponse(body.Identification)
   }
 
   def callSurePayOAuthStub(): Action[AnyContent] = cc.actionBuilder {
@@ -51,10 +49,13 @@ class SurePayStubController @Inject()(stubbedSurepayData: Map[String, SurepayDat
           TooManyRequests("Too many requests")
         } else {
           Ok(
-            Json.toJson(ConfirmationOfPayeeResponse(
-              Matched = filteredStubbedData.get.matched,
-              ReasonCode = filteredStubbedData.get.reasonCode,
-              Name = filteredStubbedData.get.accountName))
+            Json.toJson(
+              ConfirmationOfPayeeResponse(
+                Matched = filteredStubbedData.get.matched,
+                ReasonCode = filteredStubbedData.get.reasonCode,
+                Name = filteredStubbedData.get.accountName
+              )
+            )
           ).as("application/json;charset=utf-8")
         }
     }

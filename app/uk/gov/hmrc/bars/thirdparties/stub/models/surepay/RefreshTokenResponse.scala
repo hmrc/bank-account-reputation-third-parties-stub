@@ -21,10 +21,10 @@ import play.api.libs.json.{Json, OFormat, Reads}
 import java.util.UUID
 
 case class RefreshTokenResponse(
-                                access_token: String = UUID.randomUUID().toString,
-                                expires_in: String = "3600",
-                                token_type: String = "BearerToken"
-                              )
+  access_token: String = UUID.randomUUID().toString,
+  expires_in: String = "3600",
+  token_type: String = "BearerToken"
+)
 
 object RefreshTokenResponse {
   implicit val writes: OFormat[RefreshTokenResponse] = Json.format[RefreshTokenResponse]

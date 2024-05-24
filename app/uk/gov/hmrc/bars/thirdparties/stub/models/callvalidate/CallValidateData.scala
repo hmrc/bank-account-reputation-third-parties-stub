@@ -17,14 +17,14 @@
 package uk.gov.hmrc.bars.thirdparties.stub.models.callvalidate
 
 case class CallValidateData(
-                             statusCode: Int,
-                             title: String,
-                             firstname: String,
-                             surname: String,
-                             flatNumber: Option[String] = None,
-                             streetNumber: Option[String] = None,
-                             street: String,
-                             town: String,
-                             postcode: String,
-                             accountExists: String
-                         )
+  statusCode: Int,
+  title: String,
+  firstname: String,
+  surname: String,
+  flatNumber: Option[String] = None,
+  streetNumber: Option[String] = None,
+  street: String,
+  town: String,
+  postcode: String,
+  accountExists: String
+)
