@@ -3,7 +3,7 @@ import uk.gov.hmrc.DefaultBuildSettings
 ThisBuild / majorVersion := 0
 ThisBuild / scalaVersion := "2.13.12"
 ThisBuild / maintainer := "txm-attribute-validation-g@digital.hmrc.gov.uk"
-val appName = "nino-insights-stub"
+val appName = "bank-account-reputation-third-parties-stub"
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(
