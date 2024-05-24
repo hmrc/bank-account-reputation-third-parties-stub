@@ -18,7 +18,12 @@ package uk.gov.hmrc.bars.thirdparties.stub.models.callvalidate
 
 import scala.xml.Elem
 
-case class CallValidateRequest(company: String = "bm8tZGVmYXVsdC1jcmVkZW50aWFscwo", username: String = "no-default-credentials", password: String = "no-default-credentials", riskProfile: String = "V57-API-TESTOFA") {
+case class CallValidateRequest(
+  company: String = "bm8tZGVmYXVsdC1jcmVkZW50aWFscwo",
+  username: String = "no-default-credentials",
+  password: String = "no-default-credentials",
+  riskProfile: String = "V57-API-TESTOFA"
+) {
 
   def build(financialId: FinancialId): Elem = {
     <callvalidate>

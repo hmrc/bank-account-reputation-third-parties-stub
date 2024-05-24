@@ -37,28 +37,26 @@ object CallValidateStubController {
   )
 }
 
-class CallValidateStubController @Inject()(stubbedCallValidateData: Map[AccountDetails, CallValidateData], cc: ControllerComponents) {
+class CallValidateStubController @Inject() (stubbedCallValidateData: Map[AccountDetails, CallValidateData], cc: ControllerComponents) {
 
-  def callValidateAPIStub: Action[AnyContent] = cc.actionBuilder {
-    (request: Request[AnyContent]) =>
-      val requestBody = request.body.asXml.get
+  def callValidateAPIStub: Action[AnyContent] = cc.actionBuilder { (request: Request[AnyContent]) =>
+    val requestBody = request.body.asXml.get
 
-      val account = AccountDetails(requestBody.\\("Banksortcode").text, requestBody.\\("Bankaccountnumber").text)
-      val filteredStubbedData: Option[CallValidateData] = stubbedCallValidateData.get(account)
-      filteredStubbedData match {
-        case None =>
-          Ok(CallValidateResponse(CallValidateStubController.defaultResponseData).build())
+    val account = AccountDetails(requestBody.\\("Banksortcode").text, requestBody.\\("Bankaccountnumber").text)
+    val filteredStubbedData: Option[CallValidateData] = stubbedCallValidateData.get(account)
+    filteredStubbedData match {
+      case None =>
+        Ok(CallValidateResponse(CallValidateStubController.defaultResponseData).build())
+          .as("application/xml")
+      case _ =>
+        if (filteredStubbedData.get.statusCode == 429) {
+          TooManyRequests("Too many requests")
+        } else if (filteredStubbedData.get.statusCode == 500) {
+          InternalServerError("Something went wrong")
+        } else {
+          Ok(CallValidateResponse(filteredStubbedData.get).build())
             .as("application/xml")
-        case _ =>
-          if (filteredStubbedData.get.statusCode == 429) {
-            TooManyRequests("Too many requests")
-          } else if (filteredStubbedData.get.statusCode == 500) {
-            InternalServerError("Something went wrong")
-          }
-          else {
-            Ok(CallValidateResponse(filteredStubbedData.get).build())
-              .as("application/xml")
-          }
-      }
+        }
+    }
   }
 }

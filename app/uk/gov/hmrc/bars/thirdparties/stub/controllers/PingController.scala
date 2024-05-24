@@ -22,10 +22,9 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class PingController @Inject()(cc: ControllerComponents) extends BackendController(cc) {
+class PingController @Inject() (cc: ControllerComponents) extends BackendController(cc) {
 
   def ping(): Action[AnyContent] = Action.async { _ =>
     Future.successful(Ok)
   }
 }
-

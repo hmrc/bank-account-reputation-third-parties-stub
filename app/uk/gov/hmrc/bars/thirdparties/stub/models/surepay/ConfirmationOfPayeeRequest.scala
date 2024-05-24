@@ -19,11 +19,11 @@ package uk.gov.hmrc.bars.thirdparties.stub.models.surepay
 import play.api.libs.json.{Json, OFormat, Reads}
 
 case class ConfirmationOfPayeeRequest(
-                                       Identification: String,
-                                       Name: String,
-                                       AccountType: String = "Personal",
-                                       SchemeName: String = "SortCodeAccountNumber"
-                                     )
+  Identification: String,
+  Name: String,
+  AccountType: String = "Personal",
+  SchemeName: String = "SortCodeAccountNumber"
+)
 
 object ConfirmationOfPayeeRequest {
   implicit val writes: OFormat[ConfirmationOfPayeeRequest] = Json.format[ConfirmationOfPayeeRequest]

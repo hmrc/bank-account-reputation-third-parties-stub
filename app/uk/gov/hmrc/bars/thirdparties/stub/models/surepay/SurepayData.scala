@@ -17,8 +17,8 @@
 package uk.gov.hmrc.bars.thirdparties.stub.models.surepay
 
 case class SurepayData(
-                        statusCode: Int,
-                        matched: Boolean,
-                        reasonCode: Option[String],
-                        accountName: Option[String]
-                      )
+  statusCode: Int,
+  matched: Boolean,
+  reasonCode: Option[String],
+  accountName: Option[String]
+)

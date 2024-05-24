@@ -19,10 +19,10 @@ package uk.gov.hmrc.bars.thirdparties.stub.models.surepay
 import play.api.libs.json.{Json, OFormat, Reads}
 
 case class ConfirmationOfPayeeResponse(
-                           Matched: Boolean = true,
-                           ReasonCode: Option[String] = None,
-                           Name: Option[String] = None
-                         )
+  Matched: Boolean = true,
+  ReasonCode: Option[String] = None,
+  Name: Option[String] = None
+)
 
 object ConfirmationOfPayeeResponse {
   implicit val writes: OFormat[ConfirmationOfPayeeResponse] = Json.format[ConfirmationOfPayeeResponse]

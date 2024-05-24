@@ -16,13 +16,15 @@
 
 package uk.gov.hmrc.bars.thirdparties.stub.models.callvalidate
 
-case class FinancialId(sortCode: String,
-                       accountNumber: String,
-                       title: Option[String] = None,
-                       firstName: String,
-                       lastName: String,
-                       dob: Option[String] = None,
-                       address: Option[String] = None,
-                       town: Option[String] = None,
-                       postcode: String,
-                       riskProfile: Option[String] = None)
+case class FinancialId(
+  sortCode: String,
+  accountNumber: String,
+  title: Option[String] = None,
+  firstName: String,
+  lastName: String,
+  dob: Option[String] = None,
+  address: Option[String] = None,
+  town: Option[String] = None,
+  postcode: String,
+  riskProfile: Option[String] = None
+)
