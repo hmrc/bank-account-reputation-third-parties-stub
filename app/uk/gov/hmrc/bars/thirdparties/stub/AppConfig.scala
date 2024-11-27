@@ -21,6 +21,7 @@ import com.google.inject.{AbstractModule, Provides}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.bars.thirdparties.stub.models.AccountDetails
 import uk.gov.hmrc.bars.thirdparties.stub.models.callvalidate.CallValidateData
+import uk.gov.hmrc.bars.thirdparties.stub.models.modulr.ModulrData
 import uk.gov.hmrc.bars.thirdparties.stub.models.surepay.SurepayData
 
 import java.io.File
@@ -30,9 +31,11 @@ class AppConfig(environment: Environment, configuration: Configuration) extends 
 
   lazy val surepayDataFile: String = configuration.get[String]("stubbed.data.surepay")
   lazy val callValidateDataFile: String = configuration.get[String]("stubbed.data.callvalidate")
+  lazy val modulrDataFile: String = configuration.get[String]("stubbed.data.modulr")
 
   private var stubbedSurepayData: Map[String, SurepayData] = Map.empty
   private var stubbedCallValidateData: Map[AccountDetails, CallValidateData] = Map.empty
+  private var stubbedModulrData: Seq[ModulrData] = Seq.empty
 
   private def loadDataFile(stubbedDataFile: String): File = {
     environment.getExistingFile(stubbedDataFile).getOrElse {
@@ -86,4 +89,28 @@ class AppConfig(environment: Environment, configuration: Configuration) extends 
     stubbedSurepayData
   }
 
+  @Provides
+  @Singleton
+  def loadStubbedModulrData: Seq[ModulrData] = {
+    if (stubbedModulrData.isEmpty) {
+      val mockedDataStream = CSVReader.open(loadDataFile(modulrDataFile)).toStreamWithHeaders
+      val it = mockedDataStream.iterator
+      while (it.hasNext) {
+        val data = it.next()
+        val stubbedData: ModulrData = ModulrData(
+          statusCode = data("status-code").toInt,
+          resultCode = data("result-code"),
+          paymentAccountId = data("payment-account-id"),
+          sortCode = data("sort-code"),
+          accountNumber = data("account-number"),
+          secondaryAccountId = if (data("secondary-account-id").trim.isEmpty) None else Some(data("secondary-account-id")),
+          accountType = data("account-type"),
+          name = data("name")
+        )
+
+        stubbedModulrData = stubbedModulrData :+ stubbedData
+      }
+    }
+    stubbedModulrData
+  }
 }
