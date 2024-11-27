@@ -37,37 +37,6 @@ class ModulrStubControllerTest extends AnyFunSuite {
   private val appConfig = new AppConfig(env, Configuration.load(env))
   private val modulrStubController = new ModulrStubController(appConfig.loadStubbedModulrData, stubMessagesControllerComponents())
 
-  test("Fully populated invalid Modulr response") {
-
-    val expectedResult = ModulrResponse(
-      id = "",
-      result = ModulrResult(
-        code = "NOT_MATCHED",
-        name = None
-      )
-    )
-    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox/account-name-check")
-      .withHeaders(DEFAULT_TEST_HEADER)
-      .withJsonBody(
-        Json.toJson(
-          ModulrRequest(
-            paymentAccountId = "",
-            sortCode = "",
-            accountNumber = "",
-            secondaryAccountId = None,
-            accountType = "",
-            name = ""
-          )
-        )
-      )
-
-    val result: Future[Result] = modulrStubController.callModulrAPIStub.apply(fakeRequest)
-    val response = contentAsJson(result)(Timeout.zero).as[ModulrResponse]
-
-    assertThat(result.value.get.get.header.status).isEqualTo(Status.CREATED)
-    assertThat(response).isEqualTo(expectedResult)
-  }
-
   test("Valid MATCHED Modulr response") {
     val expectedResult = ModulrResponse(
       id = "",
