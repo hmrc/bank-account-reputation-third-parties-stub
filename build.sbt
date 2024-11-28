@@ -15,6 +15,7 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     scalacOptions += "-Wconf:src=routes/.*:s"
   )
+  .settings(PlayKeys.playDefaultPort := 9999)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(scalafmtOnCompile := true)
 

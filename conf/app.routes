@@ -9,3 +9,5 @@ POST          /callvalidateapi/incomingserver.php           uk.gov.hmrc.bars.thi
 
 POST          /surepay/v1/gateway                           uk.gov.hmrc.bars.thirdparties.stub.controllers.SurePayStubController.callSurePayAPIStub()
 POST          /surepay/oauth/client_credential/accesstoken  uk.gov.hmrc.bars.thirdparties.stub.controllers.SurePayStubController.callSurePayOAuthStub()
+
+POST          /api-sandbox/account-name-check               uk.gov.hmrc.bars.thirdparties.stub.controllers.ModulrStubController.callModulrAPIStub()
