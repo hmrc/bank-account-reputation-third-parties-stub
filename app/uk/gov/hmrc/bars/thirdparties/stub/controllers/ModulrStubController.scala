@@ -38,7 +38,7 @@ class ModulrStubController @Inject() (stubbedThirdPartyData: Seq[ModulrData], cc
           entry.accountNumber == body.accountNumber &&
           entry.secondaryAccountId == body.secondaryAccountId &&
           entry.accountType == body.accountType &&
-          entry.name == body.name
+          entry.name.contains(body.name.trim)
       )
 
     filteredStubbedData match {

@@ -37,12 +37,12 @@ class ModulrStubControllerTest extends AnyFunSuite {
   private val appConfig = new AppConfig(env, Configuration.load(env))
   private val modulrStubController = new ModulrStubController(appConfig.loadStubbedModulrData, stubMessagesControllerComponents())
 
-  test("Valid MATCHED Modulr response") {
+  test("Valid MATCHED Modulr personal response") {
     val expectedResult = ModulrResponse(
       id = "",
       result = ModulrResult(
         code = "MATCHED",
-        name = Some("Zaha Zorba")
+        name = Some("David Martin")
       )
     )
 
@@ -52,11 +52,11 @@ class ModulrStubControllerTest extends AnyFunSuite {
         Json.toJson(
           ModulrRequest(
             paymentAccountId = "A2100CX9GS",
-            sortCode = "206705",
-            accountNumber = "86473611",
-            secondaryAccountId = Some("123"),
+            sortCode = "999999",
+            accountNumber = "00000001",
+            secondaryAccountId = None,
             accountType = "PERSONAL",
-            name = "Zaha Zorba"
+            name = "David Martin"
           )
         )
       )
@@ -68,12 +68,43 @@ class ModulrStubControllerTest extends AnyFunSuite {
     assertThat(response).isEqualTo(expectedResult)
   }
 
-  test("Valid NOT_MATCHED Modulr response") {
+  test("Valid MATCHED Modulr business response") {
+    val expectedResult = ModulrResponse(
+      id = "",
+      result = ModulrResult(
+        code = "MATCHED",
+        name = Some("MockService Inc.")
+      )
+    )
+
+    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox/account-name-check")
+      .withHeaders(DEFAULT_TEST_HEADER)
+      .withJsonBody(
+        Json.toJson(
+          ModulrRequest(
+            paymentAccountId = "A2100CX9GS",
+            sortCode = "999999",
+            accountNumber = "00000005",
+            secondaryAccountId = None,
+            accountType = "BUSINESS",
+            name = "MockService Inc."
+          )
+        )
+      )
+
+    val result: Future[Result] = modulrStubController.callModulrAPIStub.apply(fakeRequest)
+    val response = contentAsJson(result)(Timeout.zero).as[ModulrResponse]
+
+    assertThat(result.value.get.get.header.status).isEqualTo(Status.CREATED)
+    assertThat(response).isEqualTo(expectedResult)
+  }
+
+  test("Valid NOT_MATCHED Modulr personal response") {
     val expectedResult = ModulrResponse(
       id = "",
       result = ModulrResult(
         code = "NOT_MATCHED",
-        name = Some("NOT_MATCHED")
+        name = Some("David Martin")
       )
     )
 
@@ -83,11 +114,11 @@ class ModulrStubControllerTest extends AnyFunSuite {
         Json.toJson(
           ModulrRequest(
             paymentAccountId = "A2100CX9GS",
-            sortCode = "206705",
-            accountNumber = "86473611",
-            secondaryAccountId = Some("123"),
+            sortCode = "999999",
+            accountNumber = "00000000",
+            secondaryAccountId = None,
             accountType = "PERSONAL",
-            name = "NOT_MATCHED"
+            name = "David Martin"
           )
         )
       )
@@ -99,4 +130,34 @@ class ModulrStubControllerTest extends AnyFunSuite {
     assertThat(response).isEqualTo(expectedResult)
   }
 
+  test("Valid NOT_MATCHED Modulr business response") {
+    val expectedResult = ModulrResponse(
+      id = "",
+      result = ModulrResult(
+        code = "NOT_MATCHED",
+        name = Some("MockService Inc.")
+      )
+    )
+
+    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox/account-name-check")
+      .withHeaders(DEFAULT_TEST_HEADER)
+      .withJsonBody(
+        Json.toJson(
+          ModulrRequest(
+            paymentAccountId = "A2100CX9GS",
+            sortCode = "999999",
+            accountNumber = "00000034",
+            secondaryAccountId = None,
+            accountType = "BUSINESS",
+            name = "MockService Inc."
+          )
+        )
+      )
+
+    val result: Future[Result] = modulrStubController.callModulrAPIStub.apply(fakeRequest)
+    val response = contentAsJson(result)(Timeout.zero).as[ModulrResponse]
+
+    assertThat(result.value.get.get.header.status).isEqualTo(Status.CREATED)
+    assertThat(response).isEqualTo(expectedResult)
+  }
 }
