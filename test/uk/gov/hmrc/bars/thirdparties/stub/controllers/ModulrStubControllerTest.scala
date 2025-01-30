@@ -160,4 +160,26 @@ class ModulrStubControllerTest extends AnyFunSuite {
     assertThat(result.value.get.get.header.status).isEqualTo(Status.CREATED)
     assertThat(response).isEqualTo(expectedResult)
   }
+
+  test("404 response when no data found") {
+
+    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox-token/account-name-check")
+      .withHeaders(DEFAULT_TEST_HEADER)
+      .withJsonBody(
+        Json.toJson(
+          ModulrRequest(
+            paymentAccountId = "A2100CX9GS",
+            sortCode = "121212",
+            accountNumber = "12121212",
+            secondaryAccountId = None,
+            accountType = "PERSONAL",
+            name = "David Martin"
+          )
+        )
+      )
+
+    val result: Future[Result] = modulrStubController.callModulrAPIStub.apply(fakeRequest)
+
+    assertThat(result.value.get.get.header.status).isEqualTo(Status.NOT_FOUND)
+  }
 }
