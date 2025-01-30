@@ -17,7 +17,7 @@
 package uk.gov.hmrc.bars.thirdparties.stub.controllers
 
 import play.api.libs.json.Json
-import play.api.mvc.Results.{Created, TooManyRequests}
+import play.api.mvc.Results.{Created, NotFound, TooManyRequests}
 import play.api.mvc._
 import uk.gov.hmrc.bars.thirdparties.stub.models.modulr.{ModulrData, ModulrRequest, ModulrResponse, ModulrResult}
 
@@ -31,29 +31,20 @@ class ModulrStubController @Inject() (stubbedThirdPartyData: Seq[ModulrData], cc
   }
 
   def calculateDesiredResponse(body: ModulrRequest): Result = {
-    val filteredStubbedData: Option[ModulrData] =
+    val filteredStubbedData: Option[ModulrData] = {
       stubbedThirdPartyData.find(entry =>
         entry.paymentAccountId == body.paymentAccountId &&
           entry.sortCode == body.sortCode &&
           entry.accountNumber == body.accountNumber &&
           entry.secondaryAccountId == body.secondaryAccountId &&
-          entry.accountType == body.accountType &&
-          entry.name.contains(body.name.trim)
+          entry.accountType == body.accountType
       )
+    }
 
     filteredStubbedData match {
       case None =>
-        Created(
-          Json.toJson(
-            ModulrResponse(
-              id = "",
-              result = ModulrResult(
-                code = "NOT_MATCHED",
-                name = None
-              )
-            )
-          )
-        ).as("application/json;charset=utf-8")
+        NotFound("404 Not found")
+
       case Some(stubbedData) =>
         if (stubbedData.statusCode == 429) {
           TooManyRequests("Too many requests")
