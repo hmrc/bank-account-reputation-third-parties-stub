@@ -31,15 +31,15 @@ class ModulrStubController @Inject() (stubbedThirdPartyData: Seq[ModulrData], cc
   }
 
   def calculateDesiredResponse(body: ModulrRequest): Result = {
-    val filteredStubbedData: Option[ModulrData] =
+    val filteredStubbedData: Option[ModulrData] = {
       stubbedThirdPartyData.find(entry =>
         entry.paymentAccountId == body.paymentAccountId &&
           entry.sortCode == body.sortCode &&
           entry.accountNumber == body.accountNumber &&
           entry.secondaryAccountId == body.secondaryAccountId &&
-          entry.accountType == body.accountType &&
-          entry.name.contains(body.name.trim)
+          entry.accountType == body.accountType
       )
+    }
 
     filteredStubbedData match {
       case None =>
