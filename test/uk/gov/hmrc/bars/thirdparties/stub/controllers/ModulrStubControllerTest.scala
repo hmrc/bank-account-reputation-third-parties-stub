@@ -46,7 +46,7 @@ class ModulrStubControllerTest extends AnyFunSuite {
       )
     )
 
-    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox/account-name-check")
+    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox-token/account-name-check")
       .withHeaders(DEFAULT_TEST_HEADER)
       .withJsonBody(
         Json.toJson(
@@ -77,7 +77,7 @@ class ModulrStubControllerTest extends AnyFunSuite {
       )
     )
 
-    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox/account-name-check")
+    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox-token/account-name-check")
       .withHeaders(DEFAULT_TEST_HEADER)
       .withJsonBody(
         Json.toJson(
@@ -99,16 +99,16 @@ class ModulrStubControllerTest extends AnyFunSuite {
     assertThat(response).isEqualTo(expectedResult)
   }
 
-  test("Valid NOT_MATCHED Modulr personal response") {
+  test("Valid ACCOUNT_DOES_NOT_EXIST Modulr personal response") {
     val expectedResult = ModulrResponse(
       id = "",
       result = ModulrResult(
-        code = "NOT_MATCHED",
-        name = Some("David Martin")
+        code = "ACCOUNT_DOES_NOT_EXIST",
+        name = Some("")
       )
     )
 
-    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox/account-name-check")
+    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox-token/account-name-check")
       .withHeaders(DEFAULT_TEST_HEADER)
       .withJsonBody(
         Json.toJson(
@@ -118,7 +118,7 @@ class ModulrStubControllerTest extends AnyFunSuite {
             accountNumber = "00000000",
             secondaryAccountId = None,
             accountType = "PERSONAL",
-            name = "David Martin"
+            name = ""
           )
         )
       )
@@ -130,16 +130,16 @@ class ModulrStubControllerTest extends AnyFunSuite {
     assertThat(response).isEqualTo(expectedResult)
   }
 
-  test("Valid NOT_MATCHED Modulr business response") {
+  test("Valid ACCOUNT_DOES_NOT_EXIST Modulr business response") {
     val expectedResult = ModulrResponse(
       id = "",
       result = ModulrResult(
-        code = "NOT_MATCHED",
-        name = Some("MockService Inc.")
+        code = "ACCOUNT_DOES_NOT_EXIST",
+        name = Some("")
       )
     )
 
-    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox/account-name-check")
+    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox-token/account-name-check")
       .withHeaders(DEFAULT_TEST_HEADER)
       .withJsonBody(
         Json.toJson(
@@ -149,7 +149,7 @@ class ModulrStubControllerTest extends AnyFunSuite {
             accountNumber = "00000034",
             secondaryAccountId = None,
             accountType = "BUSINESS",
-            name = "MockService Inc."
+            name = ""
           )
         )
       )
@@ -159,5 +159,75 @@ class ModulrStubControllerTest extends AnyFunSuite {
 
     assertThat(result.value.get.get.header.status).isEqualTo(Status.CREATED)
     assertThat(response).isEqualTo(expectedResult)
+  }
+
+  test("404 response when no data found") {
+
+    val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox-token/account-name-check")
+      .withHeaders(DEFAULT_TEST_HEADER)
+      .withJsonBody(
+        Json.toJson(
+          ModulrRequest(
+            paymentAccountId = "A2100CX9GS",
+            sortCode = "121212",
+            accountNumber = "12121212",
+            secondaryAccountId = None,
+            accountType = "PERSONAL",
+            name = "David Martin"
+          )
+        )
+      )
+
+    val result: Future[Result] = modulrStubController.callModulrAPIStub.apply(fakeRequest)
+
+    assertThat(result.value.get.get.header.status).isEqualTo(Status.NOT_FOUND)
+  }
+
+  Seq(
+    "NOT_MATCHED",
+    "CLOSE_MATCH",
+    "BUSINESS_ACCOUNT_NAME_MATCHED",
+    "PERSONAL_ACCOUNT_NAME_MATCHED",
+    "BUSINESS_ACCOUNT_CLOSE_MATCH",
+    "PERSONAL_ACCOUNT_CLOSE_MATCH",
+    "SECONDARY_ACCOUNT_ID_NOT_FOUND",
+    "ACCOUNT_NOT_SUPPORTED",
+    "ACCOUNT_SWITCHED",
+    "NO_RESPONSE",
+    "NOT_ENROLLED"
+  ).foreach { modulrResultCode =>
+    Seq("PERSONAL", "BUSINESS").foreach { accountType =>
+      test(s"Valid $modulrResultCode Modulr ${accountType.toLowerCase} response") {
+        val expectedResult = ModulrResponse(
+          id = "",
+          result = ModulrResult(
+            code = modulrResultCode,
+            name = Some("")
+          )
+        )
+
+        val fakeRequest = FakeRequest(method = "POST", path = s"/api-sandbox-token/account-name-check")
+          .withHeaders(DEFAULT_TEST_HEADER)
+          .withJsonBody(
+            Json.toJson(
+              ModulrRequest(
+                paymentAccountId = "A2100CX9GS",
+                sortCode = "999999",
+                accountNumber = "00000100",
+                secondaryAccountId = Some(modulrResultCode),
+                accountType = accountType,
+                name = ""
+              )
+            )
+          )
+
+        val result: Future[Result] = modulrStubController.callModulrAPIStub.apply(fakeRequest)
+        val response = contentAsJson(result)(Timeout.zero).as[ModulrResponse]
+
+        assertThat(result.value.get.get.header.status).isEqualTo(Status.CREATED)
+        assertThat(response).isEqualTo(expectedResult)
+      }
+    }
+
   }
 }
