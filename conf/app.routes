@@ -5,10 +5,5 @@ GET           /ping/ping                                    uk.gov.hmrc.bars.thi
 
 POST          /callvalidateapi/incomingserver.php           uk.gov.hmrc.bars.thirdparties.stub.controllers.CallValidateStubController.callValidateAPIStub()
 
-# Confirmation of Payee API (Business/Personal)
-
-POST          /surepay/v1/gateway                           uk.gov.hmrc.bars.thirdparties.stub.controllers.SurePayStubController.callSurePayAPIStub()
-POST          /surepay/oauth/client_credential/accesstoken  uk.gov.hmrc.bars.thirdparties.stub.controllers.SurePayStubController.callSurePayOAuthStub()
-
 POST          /api-sandbox-token/account-name-check         uk.gov.hmrc.bars.thirdparties.stub.controllers.ModulrStubController.callModulrAPIStub()
 POST          /api-sandbox/account-name-check               uk.gov.hmrc.bars.thirdparties.stub.controllers.ModulrStubController.callModulrAPIStub()
