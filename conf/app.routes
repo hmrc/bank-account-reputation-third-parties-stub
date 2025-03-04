@@ -1,9 +1,5 @@
 # Ping endpoint
 GET           /ping/ping                                    uk.gov.hmrc.bars.thirdparties.stub.controllers.PingController.ping()
 
-# CallValidate Personal endpoint (Transunion)
-
-POST          /callvalidateapi/incomingserver.php           uk.gov.hmrc.bars.thirdparties.stub.controllers.CallValidateStubController.callValidateAPIStub()
-
 POST          /api-sandbox-token/account-name-check         uk.gov.hmrc.bars.thirdparties.stub.controllers.ModulrStubController.callModulrAPIStub()
 POST          /api-sandbox/account-name-check               uk.gov.hmrc.bars.thirdparties.stub.controllers.ModulrStubController.callModulrAPIStub()

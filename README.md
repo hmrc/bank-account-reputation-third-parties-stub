@@ -1,6 +1,7 @@
 # bank-account-reputation-third-parties-stub
 
-This stub is designed to mock the implementation of any third-party services that the `bank-account-reputation` service interacts with.
+This stub is designed to mock the implementation of any third-party downstream 
+services that the `bank-account-reputation` service interacts with.
 
 ## Overview
 
