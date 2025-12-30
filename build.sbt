@@ -1,22 +1,20 @@
 import uk.gov.hmrc.DefaultBuildSettings
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "2.13.12"
+ThisBuild / scalaVersion := "2.13.18"
 ThisBuild / maintainer := "txm-attribute-validation-g@digital.hmrc.gov.uk"
 val appName = "bank-account-reputation-third-parties-stub"
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(
     play.sbt.PlayScala,
-    SbtDistributablesPlugin,
-    SbtAutoBuildPlugin
+    SbtDistributablesPlugin
   )
   .settings(
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     scalacOptions += "-Wconf:src=routes/.*:s"
   )
   .settings(PlayKeys.playDefaultPort := 9999)
-  .settings(resolvers += Resolver.jcenterRepo)
   .settings(scalafmtOnCompile := true)
 
 lazy val it = project
