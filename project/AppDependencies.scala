@@ -1,6 +1,7 @@
 import sbt.*
 
 object AppDependencies {
+
   val bootstrapVersion = "10.5.0"
 
   val compile: Seq[ModuleID] = Seq(
@@ -9,8 +10,8 @@ object AppDependencies {
   )
 
   val test: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc" %% "bootstrap-test-play-30" % bootstrapVersion  % Test,
-    "org.assertj" % "assertj-core"            % "3.27.6"          % Test
-  )
+    "uk.gov.hmrc"           %% "bootstrap-test-play-30"     % bootstrapVersion,
+    "org.assertj"           % "assertj-core"                % "3.27.7"
+  ).map(_ % Test)
 
 }
